@@ -1,1 +1,1 @@
-# Maze-of-Monsters V0.01
+# Maze of Monsters V0.01
