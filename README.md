@@ -1,2 +1,1 @@
-# Maze-of-Monsters
-this is a RPG
+# Maze-of-Monsters V0.01
