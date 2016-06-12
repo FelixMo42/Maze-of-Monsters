@@ -56,3 +56,4 @@ function charecter:GTS(s, b)
 end
 
 defChar = {}
+defChar["goblin"] = charecter:new()
