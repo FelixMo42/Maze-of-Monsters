@@ -105,13 +105,13 @@ function playerSprite:pathfind(start,target,map)
 			for y = current.y-1,current.y+1 do
 				if x ~= current.x and  y ~= current.y and map:tileWalkeble(x,current.y) and map:tileWalkeble(current.x,y) then
 					n[#n+1] = vector2:new(x,y) 
-					n[#n].g = current.g + 14
+					n[#n].g = current.g + (14 * map[x][y].speed)
 					n[#n].h = math.floor(math.sqrt((x-target.x)^2+(y-target.y)^2)*10)
 					n[#n].f = n[#n].g + n[#n].h
 					n[#n].p = current
 				elseif (x ~= current.x and y == current.y) or (x == current.x and  y ~= current.y) then
 					n[#n+1] = vector2:new(x,y) 
-					n[#n].g = current.g + 10
+					n[#n].g = current.g + (10 * map[x][y].speed)
 					n[#n].h = math.floor(math.sqrt((x-target.x)^2+(y-target.y)^2)*10)
 					n[#n].f = n[#n].g + n[#n].h
 					n[#n].p = current
