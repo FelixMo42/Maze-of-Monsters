@@ -14,14 +14,14 @@ for x = 1,10 do
 end
 
 function map:new(this)
-	this = this or {}
+	local this = this or {}
 	for k in pairs(self) do
 		if type(self[k]) == "table" and not this[k] then
 			this[k] = table.copy(self[k])
+		elseif not this[k] then
+			this[k] = self[k]
 		end
 	end
-	setmetatable(this, self)
-	self.__index = self
 	map:creatPeopleMap()
 	return this
 end

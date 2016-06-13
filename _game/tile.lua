@@ -6,14 +6,14 @@ tile = {
 }
 
 function tile:new(this)
-	this = this or {}
+	local this = this or {}
 	for k in pairs(self) do
 		if type(self[k]) == "table" and not this[k] then
 			this[k] = table.copy(self[k])
+		elseif not this[k] then
+			this[k] = self[k]
 		end
 	end
-	setmetatable(this, self)
-	self.__index = self
 	return this
 end
 

@@ -1,12 +1,13 @@
 --system
 	require("_system/console")
 	require("_system/button")
-	require("_system/vector2")
 --windows
 	require("game")
 	require("combat")
 
 function love.load()
+	width = love.graphics.getWidth()
+	height = love.graphics.getHeight()
 	game.load()
 	combat.load(charecter:new(),charecter:new())
 	window = "game"
@@ -28,6 +29,8 @@ function love.resize(w, h)
 	if _G[window].resize then
 		_G[window].resize(w, h)
 	end
+	width = love.graphics.getWidth()
+	height = love.graphics.getHeight()
 end
 
 function love.mousemoved(x,y,dx,dy)

@@ -40,6 +40,3 @@ function love.conf(t)
     t.modules.window = true             -- Enable the window module (boolean)
     t.modules.thread = false            -- Enable the thread module (boolean)
 end
-
-
--- 55+71+123+29+144+125+58+38+103+63+71+75+45 = 1000

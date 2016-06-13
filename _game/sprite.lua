@@ -6,14 +6,14 @@ sprite = {
 sprite.pos = vector2:new(1,1)
 
 function sprite:new(this)
-	this = this or {}
+	local this = this or {}
 	for k in pairs(self) do
 		if type(self[k]) == "table" and not this[k] then
 			this[k] = table.copy(self[k])
+		elseif not this[k] then
+			this[k] = self[k]
 		end
 	end
-	setmetatable(this, self)
-	self.__index = self
 	return this
 end
 
@@ -50,8 +50,8 @@ function playerSprite:update(dt)
 			table.remove(self.path,#self.path)
 		end
 	else
-		if target then
-			target:func()
+		if self.target then
+			self.target:act()
 		end
 		if love.keyboard.isDown("w","up") and map:tileWalkeble(self.pos.x,self.pos.y-1) then
 			self.path[1] = vector2:new(self.pos.x,self.pos.y-1)
@@ -77,7 +77,15 @@ function playerSprite:mousereleased()
 		self.path = path
 	end
 	if map.peopleMap[mouse.tile.x] and map.peopleMap[mouse.tile.x][mouse.tile.y] then
-		map.peopleMap[mouse.tile.x][mouse.tile.y].act()
+		self.target = map.peopleMap[mouse.tile.x][mouse.tile.y]
+		map.peopleMap[mouse.tile.x][mouse.tile.y] = nil
+		local path = self:pathfind(self.pos,mouse.tile,map)
+		table.remove(path,1)
+		if #self.path > 0 then
+			path[#path+1] = self.path[#path]
+		end
+		self.path = path
+		map.peopleMap[mouse.tile.x][mouse.tile.y] = self.target
 	end
 end
 
@@ -105,13 +113,13 @@ function playerSprite:pathfind(start,target,map)
 			for y = current.y-1,current.y+1 do
 				if x ~= current.x and  y ~= current.y and map:tileWalkeble(x,current.y) and map:tileWalkeble(current.x,y) then
 					n[#n+1] = vector2:new(x,y) 
-					n[#n].g = current.g + (14 * map[x][y].speed)
+					n[#n].g = current.g + 14
 					n[#n].h = math.floor(math.sqrt((x-target.x)^2+(y-target.y)^2)*10)
 					n[#n].f = n[#n].g + n[#n].h
 					n[#n].p = current
 				elseif (x ~= current.x and y == current.y) or (x == current.x and  y ~= current.y) then
 					n[#n+1] = vector2:new(x,y) 
-					n[#n].g = current.g + (10 * map[x][y].speed)
+					n[#n].g = current.g + 10
 					n[#n].h = math.floor(math.sqrt((x-target.x)^2+(y-target.y)^2)*10)
 					n[#n].f = n[#n].g + n[#n].h
 					n[#n].p = current
@@ -140,5 +148,9 @@ function playerSprite:pathfind(start,target,map)
 	return path,closed,open
 end
 
-npcSprite = sprite:new({})
-npcSprite.act = function() window = "combat" end
+npcSprite = sprite:new({name = "goblin"})
+
+function npcSprite:act()
+	combat.load(playerSprite,self)
+	window = "combat"
+end

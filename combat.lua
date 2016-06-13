@@ -17,6 +17,7 @@ function combat.load(...)
 	end
 	combat.ui = {}
 	combat.state = {"hp","mana"}
+	combat.line = 275
 	for i = 1,#p[1].abilities do
 		combat.ui[#combat.ui+1] = button:new{
 			y = (i-1) * 20,
@@ -30,11 +31,10 @@ function combat.load(...)
 	end
 	for i = 1,#p do
 		combat.ui[#combat.ui+1] = button:new({
-			x = i * 200,
-			y = 300,
+			x = (i-0.65) * 300,
+			y = 200,
 			w = 100,
-			h = 100,
-			e = 100,
+			h = 200,
 			data = i,
 			text = p[i].name
 		})
@@ -42,6 +42,10 @@ function combat.load(...)
 end
 
 function combat.draw()
+	love.graphics.setColor(0,255,0)
+	love.graphics.rectangle("fill",0,height-combat.line,width,combat.line)
+	love.graphics.setColor(0,0,255)
+	love.graphics.rectangle("fill",0,0,width,height-combat.line)
 	for i = 1,#combat.ui do
 		combat.ui[i]:draw()
 	end
@@ -98,7 +102,11 @@ function combat.mousepressed()
 		for i = 2,#p do
 			for l = #pl,1,-1 do
 				if p[i].act.speed-p[i]:GTS("speed") < pl[l].act.speed-pl[l]:GTS("speed") then
-					table.insert(pl[i],l)
+					table.insert(pl,l,p[i])
+					break
+				end
+				if l == 1 then
+					pl[#pl+1] = p[i]
 				end
 			end
 		end

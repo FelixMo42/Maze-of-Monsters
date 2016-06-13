@@ -5,9 +5,6 @@ require("_game/sprite")
 game = {}
 
 function game.load()
-	--other
-		width = love.graphics.getWidth()
-		height = love.graphics.getHeight()
 	--mouse
 		mouse = {}
 		mouse.tile = vector2:new(0,0)
@@ -31,12 +28,6 @@ function game.draw()
 		map:draw()
 	--player
 		playerSprite:draw()
-end
-
-function game.resize(w, h)
-	--update mesures
-		width = love.graphics.getWidth()
-		height = love.graphics.getHeight()
 end
 
 function game.mousemoved(x,y,dx,dy)
