@@ -14,27 +14,23 @@ function combat.load(...)
 		else
 			p[i] = charecter:new(p[i])
 		end
+		p[i]:load()
 	end
 	combat.ui = {}
-	combat.state = {"hp","mana"}
-	combat.line = 275
+	combat.line = 150
 	for i = 1,#p[1].abilities do
 		combat.ui[#combat.ui+1] = button:new{
-			y = (i-1) * 20,
-			rx = 0,
-			h = 20,
-			w = 100,
+			y = (i-1) * 20, rx = 0,
+			h = 20, w = 100,
 			e = 0,
-			text = p[1].abilities[i].name,
-			data = p[1].abilities[i]
+			data = p[1].abilities[i],
+			text = p[1].abilities[i].name
 		}
 	end
 	for i = 1,#p do
 		combat.ui[#combat.ui+1] = button:new({
-			x = (i-0.65) * 300,
-			y = 200,
-			w = 100,
-			h = 200,
+			x = (i-0.65) * 300, ry = combat.line-75,
+			w = 100, h = 200,
 			data = i,
 			text = p[i].name
 		})
@@ -49,13 +45,27 @@ function combat.draw()
 	for i = 1,#combat.ui do
 		combat.ui[i]:draw()
 	end
+	local m = 55
+	love.graphics.setLineWidth(5)
 	love.graphics.setColor(255,255,255)
-	for i = 1,#combat.state do
-		love.graphics.print(combat.state[i]..": "..p[1][combat.state[i]].." / "..p[2][combat.state[i]],0,(i-1)*15)
+	love.graphics.rectangle("fill",-10,-10,140,#p*m+32,10)
+	love.graphics.setColor(0,0,0)
+	love.graphics.rectangle("line",-8,-10,140,#p*m+32,10)
+	love.graphics.setLineWidth(2)
+	for i = 1,#p do
+		love.graphics.setColor(0,0,0)
+		love.graphics.print(p[i].name..": ",10,(i-1)*m+10)
+		love.graphics.setColor(185,0,0)
+		love.graphics.rectangle("fill",10,(i-1)*m+10+17,110,17+17)
+		love.graphics.setColor(255,0,0)
+		love.graphics.rectangle("fill",12,(i-1)*m+12+17,math.min((p[i].hp/p[i].Thp),1)*106,13)
+		love.graphics.setColor(0,0,255)
+		love.graphics.rectangle("fill",12,(i-1)*m+12+(17*2),math.min((p[i].mana/p[i].Tmana),1)*106,13)
+		love.graphics.setColor(255,255,255)
+		love.graphics.print("HP: "..p[i].hp.."/"..p[i].Thp,14,(i-1)*m+10+19)
+		love.graphics.print("mana: "..p[i].mana.."/"..p[i].Tmana,14,(i-1)*m+10+19+17)
 	end
-	if p[1].act then
-		love.graphics.print(p[1].act.name,0,30)
-	end
+	love.graphics.setLineWidth(1)
 end
 
 function combat.mousepressed()
@@ -72,21 +82,27 @@ function combat.mousepressed()
 			do return end
 		end
 	--get target
-		for i = 1,#combat.ui do
-			p[1].act.t = combat.ui[i]:onPressed()
-			if type(p[1].act.t) == "number" then
-				break
-			else
-				p[1].act.t = nil
+		if p[1].act.RT then
+			for i = 1,#combat.ui do
+				p[1].act.t = combat.ui[i]:onPressed()
+				if type(p[1].act.t) == "number" then
+					break
+				else
+					p[1].act.t = nil
+				end
 			end
+			if p[1].act.t == nil then
+				do return end
+			end
+			p[1].act.t = p[p[1].act.t]
+			p[1].act.p = p[1]
 		end
-		if p[1].act.t == nil then
-			do return end
-		end
-		p[1].act.t = p[p[1].act.t]
-		p[1].act.p = p[1]
 	--get enemy move
 		for i = 2,#p do
+			p[i].act = abilities.attack
+			p[i].act.p = p[i]
+			p[i].act.t = p[1]
+			--[[
 			if p[i].hp <= 30 and p[i].mana >= 10 then
 				p[i].act = abilities.heal
 				p[i].act.p = p[i]
@@ -96,6 +112,7 @@ function combat.mousepressed()
 				p[i].act.p = p[i]
 				p[i].act.t = p[1]
 			end
+			]]
 		end
 	--use moves
 		local pl = {p[1]}
@@ -115,11 +132,14 @@ function combat.mousepressed()
 				pl[i].act.func(pl[i].act.p,pl[i].act.t)
 				pl[i].mana = pl[i].mana - pl[i].act.mana
 			end
+			if pl[i].act.t.hp <= 0 then
+				pl[i]:addXP(pl[i].act.t.rewards.xp)
+			end
 			pl[i].act.t = nil
 		end
 	--next turn
 		turn = turn + 1
-		for i = 1,#p do
+		for i in pairs(p) do
 			for k in pairs(p[i].bonuses) do
 				p[i].bonuses[k].t = p[i].bonuses[k].t - 1
 				if p[i].bonuses[k].t <= 0 then
@@ -127,7 +147,16 @@ function combat.mousepressed()
 				end
 			end
 			if p[i].hp <= 0 then
-				window = "game"
-			end
+				table.remove(p,i)
+			end	
 		end
+		if #p <= 1 then
+			window = "game"
+		end
+end
+
+function combat.resize(w,h)
+	for i = 1,#combat.ui do
+		combat.ui[i]:update()
+	end
 end

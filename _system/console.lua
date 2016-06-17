@@ -21,7 +21,7 @@ end
 
 --extra functions
 
-function table.removeValue(t, v)
+function table.removeValue(t,v)
 	for i = 1,#t do
 		if t[i] == v then
 			table.remove(t,i)
@@ -47,7 +47,7 @@ function table.copy(object)
     return _copy(object)
 end
 
-function table.contains(t, e)
+function table.contains(t,e)
 	for k, value in pairs(t) do
 		if value == e then
 			return true,k

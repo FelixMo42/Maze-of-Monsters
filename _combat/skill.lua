@@ -42,6 +42,7 @@ skills = {}
 
 abilitie = {
 	name = "",
+	RT = true,
 	type = "abilitie",
 	mana = 0,
 	speed = 50,
@@ -57,51 +58,53 @@ function abilitie:new(this)
 end
 
 abilities = {}
-	abilities["attack"] = abilitie:new({name="attack"})
-	abilities["attack"].func = function(p,t)
-		local p = p or player[math.floor(turn/2)*2-turn+2]
-		local t = t or player[math.loop(math.floor(turn/2)*2-turn+1,2)]
-		local n = math.random(100)
-		local a = math.max(p:GTS(p.equips.weapon.type) + p.equips.weapon.atk - t:GTS("def"),0)
-		local d = t:GTS("dodge") - p:GTS("aim")
-		if n >= 95 then
-			t.hp = t.hp - a
-		end
-		if n - d >= 100/3 then
-			t.hp = t.hp - a
-		end
+abilities["skip turn"] = abilitie:new({name = "skip turn", RT = false, speed = 0})
+abilities["retreat"] = abilitie:new({name="retreat", RT = false, speed = 0})
+abilities["retreat"].func = function() window = "game" end
+abilities["attack"] = abilitie:new({name="attack"})
+abilities["attack"].func = function(p,t)
+	local p = p or player[math.floor(turn/2)*2-turn+2]
+	local t = t or player[math.loop(math.floor(turn/2)*2-turn+1,2)]
+	local n = math.random(100)
+	local a = math.max(p:GTS(p.equips.weapon.Wtype) + p.equips.weapon.atk - t:GTS("def"),0)
+	local d = t:GTS("dodge") - p:GTS("aim")
+	if n >= 95 then
+		t.hp = t.hp - a
 	end
-	abilities["skip turn"] = abilitie:new({name = "skip turn", speed = 0})
-	abilities["defend"] = abilitie:new({name = "defend", speed = 25})
-	abilities["defend"].func = function(p,t)
-		local p = p or player[math.floor(turn/2)*2-turn+2]
-		local t = t or player[math.floor(turn/2)*2-turn+2]
-		t.bonuses["def"] = {t = 1, b = 10}
+	if n - d >= 100/3 then
+		t.hp = t.hp - a
 	end
-	abilities["dodge"] = abilitie:new({name = "dodge", speed = 25})
-	abilities["dodge"].func = function(p,t)
-		love.event.quit()
-		local p = p or player[math.floor(turn/2)*2-turn+2]
-		local t = t or player[math.floor(turn/2)*2-turn+2]
-		t.bonuses["dodge"] = {t = 1, b = 10}
+end
+abilities["defend"] = abilitie:new({name = "defend", speed = 25})
+abilities["defend"].func = function(p,t)
+	local p = p or player[math.floor(turn/2)*2-turn+2]
+	local t = t or player[math.floor(turn/2)*2-turn+2]
+	t.bonuses["def"] = {t = 1, b = 10}
+end
+abilities["dodge"] = abilitie:new({name = "dodge", speed = 25})
+abilities["dodge"].func = function(p,t)
+	love.event.quit()
+	local p = p or player[math.floor(turn/2)*2-turn+2]
+	local t = t or player[math.floor(turn/2)*2-turn+2]
+	t.bonuses["dodge"] = {t = 1, b = 10}
+end
+abilities["heal"] = abilitie:new({name = "heal", speed = 25, mana = 10})
+abilities["heal"].func = function(p,t)
+	local p = p or player[math.floor(turn/2)*2-turn+2]
+	local t = t or player[math.floor(turn/2)*2-turn+2]
+	t.hp = t.hp + 10 + p:GTS("healing")
+end
+abilities["fire blast"] = abilitie:new({name = "fire blast", mana = 20})
+abilities["fire blast"].func = function(p,t)
+	local p = p or player[math.floor(turn/2)*2-turn+2]
+	local t = t or player[math.loop(math.floor(turn/2)*2-turn+1,2)]
+	local n = math.random(100)
+	local a = math.max(p:GTS("pyromancy") + self.equips.Matk - t:GTS("def"),0)
+	local d = t:GTS("dodge") - p:GTS("aim")
+	if n >= 95 then
+		t.hp = t.hp - a
 	end
-	abilities["heal"] = abilitie:new({name = "heal", speed = 25, mana = 10})
-	abilities["heal"].func = function(p,t)
-		local p = p or player[math.floor(turn/2)*2-turn+2]
-		local t = t or player[math.floor(turn/2)*2-turn+2]
-		t.hp = t.hp + 10 + p:GTS("healing")
+	if n - d >= 100/3 then
+		t.hp = t.hp - a
 	end
-	abilities["fire blast"] = abilitie:new({name = "fire blast", mana = 20})
-	abilities["fire blast"].func = function(p,t)
-		local p = p or player[math.floor(turn/2)*2-turn+2]
-		local t = t or player[math.loop(math.floor(turn/2)*2-turn+1,2)]
-		local n = math.random(100)
-		local a = math.max(p:GTS("pyromancy") + self.equips.Matk - t:GTS("def"),0)
-		local d = t:GTS("dodge") - p:GTS("aim")
-		if n >= 95 then
-			t.hp = t.hp - a
-		end
-		if n - d >= 100/3 then
-			t.hp = t.hp - a
-		end
-	end 
+end

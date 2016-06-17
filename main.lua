@@ -2,15 +2,22 @@
 	require("_system/console")
 	require("_system/button")
 --windows
-	require("game")
-	require("combat")
+	require("_window/game")
+	require("_window/combat")
+	require("_window/menu")
 
 function love.load()
+	--mouse
+		mouse = {}
+		mouse.tile = vector2:new(0,0)
+		mouse.pos = vector2:new(0,0)
+		mouse.dragge = 0
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 	game.load()
+	menu.load()
 	combat.load(charecter:new(),charecter:new())
-	window = "game"
+	window = "menu"
 end
 
 function love.update(dt)
@@ -25,15 +32,19 @@ function love.draw()
 	end
 end
 
-function love.resize(w, h)
+function love.resize(w,h)
+	width = love.graphics.getWidth()
+	height = love.graphics.getHeight()
 	if _G[window].resize then
 		_G[window].resize(w, h)
 	end
-	width = love.graphics.getWidth()
-	height = love.graphics.getHeight()
 end
 
 function love.mousemoved(x,y,dx,dy)
+	--mouse
+		mouse.pos = vector2:new(x,y)
+		mouse.tile.x = math.floor((x/map.s)-map.pos.x)
+		mouse.tile.y = math.floor((y/map.s)-map.pos.y)
 	if _G[window].mousemoved then
 		_G[window].mousemoved(x,y,dx,dy)
 	end
@@ -46,6 +57,10 @@ function love.mousepressed(x, y, button, istouch)
 end
 
 function love.mousereleased(x, y, button, istouch)
+	--mouse
+		mouse.pos = vector2:new(x,y)
+		mouse.tile.x = math.floor((x/map.s)-map.pos.x)
+		mouse.tile.y = math.floor((y/map.s)-map.pos.y)
 	if _G[window].mousereleased then
 		_G[window].mousereleased(x, y, button, istouch)
 	end

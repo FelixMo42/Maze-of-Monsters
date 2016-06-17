@@ -1,8 +1,8 @@
 charecter = {
-	Thp = 100,
-	hp = 100,
-	Tmana = 100,
-	mana = 100,
+	level = 1, xp = 0,
+	Thp = 100,hp = 100,
+	Tmana = 100,mana = 100,
+	rewards = {xp = 10},
 	states = {
 		dex = 0,
 		str = 0,
@@ -15,6 +15,7 @@ charecter = {
 	bonuses = {},
 	abilities = {
 		abilities["skip turn"],
+		abilities["retreat"],
 		abilities["attack"],
 		abilities["defend"],
 		abilities["heal"]
@@ -37,7 +38,7 @@ function charecter:new(this)
 	return this
 end
 
-function charecter:GTS(s, b)
+function charecter:GTS(s,b)
 	local t = b or 0
 	if self.bonuses[s] then
 		t = t + self.bonuses[s].b
@@ -54,6 +55,25 @@ function charecter:GTS(s, b)
 		end
 	end
 	return t
+end
+
+function charecter:load()
+	self.Thp = (self.states.con+1)*25
+	self.hp = self.Thp
+	self.Tmana = (self.states.wis+1)*25
+	self.mana = self.Tmana
+end
+
+function charecter:addXP(xp)
+	self.xp = self.xp + xp
+	repeat
+		if self.xp >= 25*2^self.level then
+			self.xp = self.xp - (25*2^self.level)
+			self.level = self.level + 1
+		else
+			return
+		end
+	until true
 end
 
 defChar = {}

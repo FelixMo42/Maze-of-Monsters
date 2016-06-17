@@ -1,6 +1,7 @@
 item = {
 	name = "item",
 	type = "item",
+	x = 1,y = 1,
 	bonuses = {}
 }
 
@@ -16,9 +17,17 @@ function item:new(this)
 	return this
 end
 
+function item:draw(this)
+	love.graphics.setColor(255,255,255)
+	love.graphics.rectangle("fill",self.x,self.y,60,60)
+	love.graphics.setColor(0,0,0)
+	love.graphics.printf(self.name,self.x,self.y+60/2-love.graphics.getFont():getHeight(),60,"center")
+end
+
 weapon = item:new{
 	name = "short sword",
-	type = "sword",
+	type = "weapon",
+	Wtype = "sword",
 	Matk = 0,
 	atk = 10,
 	bonuses = {
@@ -27,8 +36,12 @@ weapon = item:new{
 	}
 }
 
+weapons = {}
+
+weapons["longsword"] = weapon:new({name = "long sword"})
+
 armor = item:new{
-	name = "leather",
+	name = "leather armour",
 	type = "armour",
 	bonuses = {
 		speed = 10,
@@ -36,3 +49,7 @@ armor = item:new{
 		dodge  = 5
 	}	
 }
+
+armors = {}
+
+armors["ironarmor"] = armor:new({name = "iron armor"})

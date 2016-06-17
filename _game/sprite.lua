@@ -51,7 +51,8 @@ function playerSprite:update(dt)
 		end
 	else
 		if self.target then
-			self.target:act()
+			self.target:func()
+			self.target = nil
 		end
 		if love.keyboard.isDown("w","up") and map:tileWalkeble(self.pos.x,self.pos.y-1) then
 			self.path[1] = vector2:new(self.pos.x,self.pos.y-1)
@@ -66,6 +67,11 @@ function playerSprite:update(dt)
 			self.path[1] = vector2:new(self.pos.x-1,self.pos.y)
 		end
 	end
+end
+
+function playerSprite:mousepressed()
+	
+	self.target = nil
 end
 
 function playerSprite:mousereleased()
@@ -150,7 +156,7 @@ end
 
 npcSprite = sprite:new({name = "goblin"})
 
-function npcSprite:act()
+function npcSprite:func()
 	combat.load(playerSprite,self)
 	window = "combat"
 end
