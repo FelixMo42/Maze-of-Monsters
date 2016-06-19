@@ -2,7 +2,7 @@ charecter = {
 	level = 1, xp = 0,
 	Thp = 100,hp = 100,
 	Tmana = 100,mana = 100,
-	rewards = {xp = 10},
+	rewards = {xp = 10,items = {weapons["shortsword"]}},
 	states = {
 		dex = 0,
 		str = 0,
@@ -22,7 +22,9 @@ charecter = {
 	},
 	equips = {
 		weapon = weapon:new(),
-		armor = armor:new()
+		armor = armor:new(),
+		weapons["longsword"]:new(),
+		armors["ironarmor"]:new()
 	},
 }
 
@@ -36,6 +38,13 @@ function charecter:new(this)
 		end
 	end
 	return this
+end
+
+function charecter:load()
+	self.Thp = (self.states.con+1)*25
+	self.hp = self.Thp
+	self.Tmana = (self.states.wis+1)*25
+	self.mana = self.Tmana
 end
 
 function charecter:GTS(s,b)
@@ -55,13 +64,6 @@ function charecter:GTS(s,b)
 		end
 	end
 	return t
-end
-
-function charecter:load()
-	self.Thp = (self.states.con+1)*25
-	self.hp = self.Thp
-	self.Tmana = (self.states.wis+1)*25
-	self.mana = self.Tmana
 end
 
 function charecter:addXP(xp)

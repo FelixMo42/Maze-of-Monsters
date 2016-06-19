@@ -29,7 +29,8 @@ weapon = item:new{
 	type = "weapon",
 	Wtype = "sword",
 	Matk = 0,
-	atk = 10,
+	atk = 15,
+	pos = {x=1,y=1},
 	bonuses = {
 		speed = 10,
 		aim = 5
@@ -38,7 +39,8 @@ weapon = item:new{
 
 weapons = {}
 
-weapons["longsword"] = weapon:new({name = "long sword"})
+weapons["shortsword"] = weapon:new()
+weapons["longsword"] = weapon:new({name = "long sword",atk = 1000})
 
 armor = item:new{
 	name = "leather armour",
@@ -52,4 +54,5 @@ armor = item:new{
 
 armors = {}
 
+weapons["leatherarmour"] = weapon:new()
 armors["ironarmor"] = armor:new({name = "iron armor"})

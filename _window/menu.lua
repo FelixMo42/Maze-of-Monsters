@@ -57,17 +57,7 @@ function menu.draw()
 	menu[menu.tab].draw()
 end
 
-function menu.mousepressed(x, y, button, istouch)
-	for i = 1,#menu.tabs do
-		if menu.tabs[i]:onPressed() then
-			menu.tab = menu.tabs[i].text
-			table.insert(menu.tabs,1,menu.tabs[i])
-			table.remove(menu.tabs,i+1)
-		end
-	end
-	for i = 1,#menu.ui do
-		menu.ui[i]:onPressed()
-	end
+function menu.mousepressed(x,y,button,istouch)
 	if menu[menu.tab].mousepressed then
 		menu[menu.tab].mousepressed(x, y, button, istouch)
 	end
@@ -79,9 +69,31 @@ function menu.mousemoved(x,y,dx,dy)
 	end
 end
 
-function menu.mousereleased(x, y, button, istouch)
+function menu.mousereleased(x,y,button,istouch)
 	if menu[menu.tab].mousereleased then
-		menu[menu.tab].mousereleased(x, y, button, istouch)
+		if not menu[menu.tab].mousereleased(x,y,button,istouch) then
+			for i = 1,#menu.tabs do
+				if menu.tabs[i]:onPressed() then
+					menu.tab = menu.tabs[i].text
+					table.insert(menu.tabs,1,menu.tabs[i])
+					table.remove(menu.tabs,i+1)
+				end
+			end
+			for i = 1,#menu.ui do
+				menu.ui[i]:onPressed()
+			end
+		end
+	else
+		for i = 1,#menu.tabs do
+			if menu.tabs[i]:onPressed() then
+				menu.tab = menu.tabs[i].text
+				table.insert(menu.tabs,1,menu.tabs[i])
+				table.remove(menu.tabs,i+1)
+			end
+		end
+		for i = 1,#menu.ui do
+			menu.ui[i]:onPressed()
+		end
 	end
 end
 

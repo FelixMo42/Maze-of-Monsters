@@ -9,10 +9,29 @@ for x = 1,5 do
 end 
 
 for k in pairs(playerSprite.equips) do
-	menu.poses[#menu.poses+1] = {x=40,y=(#menu.poses-29)*80-20,t=playerSprite.equips[k].type}
+	if type(k) == "string" then
+		menu.poses[#menu.poses+1] = {x=40,y=(#menu.poses-29)*80-20,t=playerSprite.equips[k].type}
+		menu.poses[#menu.poses].item = playerSprite.equips[k]
+		playerSprite.equips[k].x = 40
+		playerSprite.equips[k].y = (#menu.poses-30)*80-20
+		playerSprite.equips[k].pos = menu.poses[#menu.poses]
+	else
+		for i = 1,#menu.poses do
+			if not menu.poses[i].item then
+				menu.poses[i].item = playerSprite.equips[k]
+				playerSprite.equips[k].x = menu.poses[i].x
+				playerSprite.equips[k].y = menu.poses[i].y
+				playerSprite.equips[k].pos = menu.poses[i]
+				break
+			end
+		end
+	end
 end
 
 function menu.inventory.draw()
+	love.graphics.rectangle("fill",40,height-100,60,60)
+	love.graphics.setColor(0,0,0)
+	love.graphics.printf("trash", 40, height-100+60/2-14/2, 60, "center")
 	for i = 1,#menu.poses do
 		love.graphics.setColor(255,255,255)
 		love.graphics.rectangle("fill",menu.poses[i].x,menu.poses[i].y,60,60)
@@ -46,16 +65,38 @@ end
 
 function menu.inventory.mousereleased(x, y, button, istouch)
 	if menu.selected then
+		if x >= 40 and y >= height-100 and x <= 100 and y <= height-40 then
+			table.removeValue(playerSprite.equips,menu.selected)
+			return
+		end
 		for i = 1,#menu.poses do
-			if x >= menu.poses[i].x and y >= menu.poses[i].y and x <= menu.poses[i].x+60 and y <= menu.poses[i].y+60 then
-				if not menu.poses[i].t or menu.poses[i].t == menu.selected.type then
-					menu.selected.x, menu.selected.y = menu.poses[i].x, menu.poses[i].y
+			local pos = menu.poses[i]
+			local item = menu.selected
+			if x >= pos.x and y >= pos.y and x <= pos.x+60 and y <= pos.y+60 and (not pos.t or pos.t == item.type) then
+				if pos.t then
+					table.removeValue(playerSprite.equips,item)
+					playerSprite.equips[#playerSprite.equips+1] = pos.item
+					playerSprite.equips[pos.t] = item
 				end
+				-- old pos - item.pos
+				item.pos.item = pos.item
+				-- current item	- pos.item			
+				if pos.item then
+					pos.item.pos = item.pos
+					pos.item.x, pos.item.y = item.pos.x, item.pos.y
+				end
+				-- current pos - pos
+				pos.item = item
+				-- old item - item
+				item.pos = pos
+				item.x, item.y = pos.x, pos.y
 				break
 			else
 				menu.selected.x, menu.selected.y = menu.selected.prev.x, menu.selected.prev.y
 			end
 		end
 		menu.selected = nil
+		return true
 	end
+	return false
 end

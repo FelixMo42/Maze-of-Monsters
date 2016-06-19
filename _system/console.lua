@@ -1,8 +1,8 @@
 console = {"log started"}
-console.x = 590
-console.y = 10
-console.w = 200
-console.h = 580
+	console.x = 590
+	console.y = 10
+	console.w = 200
+	console.h = 580
 
 function console.log(text)
 	console[#console+1] = text or "no text"

@@ -1,6 +1,6 @@
 sprite = {
 	type = "charecter",
-	name = "bob"
+	name = "jhony deep"
 }
 
 sprite.pos = vector2:new(1,1)
@@ -124,7 +124,7 @@ function playerSprite:pathfind(start,target,map)
 					n[#n].f = n[#n].g + n[#n].h
 					n[#n].p = current
 				elseif (x ~= current.x and y == current.y) or (x == current.x and  y ~= current.y) then
-					n[#n+1] = vector2:new(x,y) 
+					n[#n+1] = vector2:new(x,y)
 					n[#n].g = current.g + 10
 					n[#n].h = math.floor(math.sqrt((x-target.x)^2+(y-target.y)^2)*10)
 					n[#n].f = n[#n].g + n[#n].h
@@ -141,9 +141,9 @@ function playerSprite:pathfind(start,target,map)
 		end
 		n = nil
 		current = nil
-    end
-    local path = {}
-    if closed[target.x.."_"..target.y] then
+	end
+	local path = {}
+	if closed[target.x.."_"..target.y] then
 		path[1] = closed[target.x.."_"..target.y]
 		while path[#path].g ~= 0 do
 			path[#path+1] = path[#path].p

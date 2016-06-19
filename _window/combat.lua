@@ -96,6 +96,8 @@ function combat.mousepressed()
 			end
 			p[1].act.t = p[p[1].act.t]
 			p[1].act.p = p[1]
+		else
+			p[1].act.t = p[1]
 		end
 	--get enemy move
 		for i = 2,#p do
@@ -134,6 +136,20 @@ function combat.mousepressed()
 			end
 			if pl[i].act.t.hp <= 0 then
 				pl[i]:addXP(pl[i].act.t.rewards.xp)
+				if pl[i].act.t.rewards.items then
+					for k = 1,#pl[i].act.t.rewards.items do
+						pl[i].equips[#pl[i].equips+1] = pl[i].act.t.rewards.items[k]:new()
+						for p = 1,#menu.poses do
+							if not menu.poses[p].item then
+								menu.poses[p].item = pl[i].equips[#pl[i].equips]
+								pl[i].equips[#pl[i].equips].x = menu.poses[p].x
+								pl[i].equips[#pl[i].equips].y = menu.poses[p].y
+								pl[i].equips[#pl[i].equips].pos = menu.poses[p]
+								break
+							end
+						end
+					end
+				end
 			end
 			pl[i].act.t = nil
 		end
