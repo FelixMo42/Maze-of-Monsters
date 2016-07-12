@@ -25,10 +25,10 @@ function love.load()
 	--saves
 		filename = "data.txt"
 		if not love.filesystem.isFile(filename) then
-			data = love.filesystem.newFile(filename)
+			love.filesystem.newFile(filename)
 			love.filesystem.write(filename,"")
 		end
-		loadstring(love.filesystem.read(filename))
+		loadstring(love.filesystem.read(filename))()
 	--font
 		for i = 5,100 do
 			_G["f"..i] = love.graphics.newFont(i)

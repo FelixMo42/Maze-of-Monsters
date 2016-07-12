@@ -173,9 +173,9 @@ function combat.quit()
 	data = data.."playerSprite.level = "..p.level.."; playerSprite.xp = "..p.xp.."\n"
 	data = data.."pSkills = {"
 	for i = 1,#p.skills do
-		data = data.."{'"..p.skills[i].name.."',"..p.skills[i].level..","..p.skills[i].xp.."},"
+		data = data.."{'"..p.skills[i].name.."',"..p.skills[i].level..","..p.skills[i].xp.."}"
+		if i ~= #p.skills then data = data.."," end
 	end
-	data = string.sub(data, 1,-2)
 	data = data.."}\nplayerSprite.skills = {}\nfor i = 1,#pSkills do\n"
 	data = data.."playerSprite.skills[pSkills[i][1]] = skills[pSkills[i][1]]:new({level=pSkills[i][2],xp=pSkills[i][3]})\n"
 	data = data.."playerSprite.skills[#playerSprite.skills+1] = playerSprite.skills[pSkills[i][1]]\nend\n"
