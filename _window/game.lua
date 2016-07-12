@@ -76,3 +76,8 @@ function game.resize(w,h)
 		game.ui[i]:update()
 	end
 end
+
+function game.quit()
+	data = data.."playerSprite.pos.x = ".. playerSprite.pos.x..";playerSprite.pos.y = "..playerSprite.pos.y..";"
+	data = data.."playerSprite.name = '".. playerSprite.name.."';"
+end

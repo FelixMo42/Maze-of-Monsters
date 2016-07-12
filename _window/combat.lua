@@ -5,35 +5,37 @@ require("_combat/charecter")
 combat = {}
 
 function combat.load(...)
-	p = {}
-	turn = 1
-	for i = 1,select('#',...) do
-		p[i] = select(i,...)
-		if defChar[p[i].name] then
-			p[i] = defChar[p[i].name]:new(p[i])
-		else
-			p[i] = charecter:new(p[i])
+	if select('#',...) > 0 then
+		p = {}
+		turn = 1
+		for i = 1,select('#',...) do
+			p[i] = select(i,...)
+			if defChar[p[i].name] then
+				p[i] = defChar[p[i].name]:new(p[i])
+			else
+				p[i] = charecter:new(p[i])
+			end
+			p[i]:load()
 		end
-		p[i]:load()
-	end
-	combat.ui = {}
-	combat.line = 150
-	for i = 1,#p[1].abilities do
-		combat.ui[#combat.ui+1] = button:new{
-			y = (i-1) * 20, rx = 0,
-			h = 20, w = 100,
-			e = 0,
-			data = p[1].abilities[i],
-			text = p[1].abilities[i].name
-		}
-	end
-	for i = 1,#p do
-		combat.ui[#combat.ui+1] = button:new({
-			x = (i-0.65) * 300, ry = combat.line-75,
-			w = 100, h = 200,
-			data = i,
-			text = p[i].name
-		})
+		combat.ui = {}
+		combat.line = 150
+		for i = 1,#p[1].abilities do
+			combat.ui[#combat.ui+1] = button:new{
+				y = (i-1) * 20, rx = 0,
+				h = 20, w = 100,
+				e = 0,
+				data = p[1].abilities[i],
+				text = p[1].abilities[i].name
+			}
+		end
+		for i = 1,#p do
+			combat.ui[#combat.ui+1] = button:new({
+				x = (i-0.65) * 300, ry = combat.line-75,
+				w = 100, h = 200,
+				data = i,
+				text = p[i].name
+			})
+		end
 	end
 end
 
@@ -104,17 +106,6 @@ function combat.mousepressed()
 			p[i].act = abilities.attack
 			p[i].act.p = p[i]
 			p[i].act.t = p[1]
-			--[[
-			if p[i].hp <= 30 and p[i].mana >= 10 then
-				p[i].act = abilities.heal
-				p[i].act.p = p[i]
-				p[i].act.t = p[i]
-			else
-				p[i].act = abilities.attack
-				p[i].act.p = p[i]
-				p[i].act.t = p[1]
-			end
-			]]
 		end
 	--use moves
 		local pl = {p[1]}
@@ -136,20 +127,20 @@ function combat.mousepressed()
 			end
 			if pl[i].act.t.hp <= 0 then
 				pl[i]:addXP(pl[i].act.t.rewards.xp)
-				if pl[i].act.t.rewards.items then
-					for k = 1,#pl[i].act.t.rewards.items do
-						pl[i].equips[#pl[i].equips+1] = pl[i].act.t.rewards.items[k]:new()
-						for p = 1,#menu.poses do
-							if not menu.poses[p].item then
-								menu.poses[p].item = pl[i].equips[#pl[i].equips]
-								pl[i].equips[#pl[i].equips].x = menu.poses[p].x
-								pl[i].equips[#pl[i].equips].y = menu.poses[p].y
-								pl[i].equips[#pl[i].equips].pos = menu.poses[p]
-								break
+					for k = 1,#pl[i].act.t.equips do
+						if love.math.random(100) <= pl[i].act.t.equips[k].d then
+							pl[i].equips[#pl[i].equips+1] = pl[i].act.t.equips[k]:new()
+							for p = 1,#menu.poses do
+								if not menu.poses[p].item then
+									menu.poses[p].item = pl[i].equips[#pl[i].equips]
+									pl[i].equips[#pl[i].equips].x = menu.poses[p].x
+									pl[i].equips[#pl[i].equips].y = menu.poses[p].y
+									pl[i].equips[#pl[i].equips].pos = menu.poses[p]
+									break
+								end
 							end
 						end
 					end
-				end
 			end
 			pl[i].act.t = nil
 		end
@@ -175,4 +166,17 @@ function combat.resize(w,h)
 	for i = 1,#combat.ui do
 		combat.ui[i]:update()
 	end
+end
+
+function combat.quit()
+	local p = playerSprite
+	data = data.."playerSprite.level = "..p.level.."; playerSprite.xp = "..p.xp.."\n"
+	data = data.."pSkills = {"
+	for i = 1,#p.skills do
+		data = data.."{'"..p.skills[i].name.."',"..p.skills[i].level..","..p.skills[i].xp.."},"
+	end
+	data = string.sub(data, 1,-2)
+	data = data.."}\nplayerSprite.skills = {}\nfor i = 1,#pSkills do\n"
+	data = data.."playerSprite.skills[pSkills[i][1]] = skills[pSkills[i][1]]:new({level=pSkills[i][2],xp=pSkills[i][3]})\n"
+	data = data.."playerSprite.skills[#playerSprite.skills+1] = playerSprite.skills[pSkills[i][1]]\nend\n"
 end

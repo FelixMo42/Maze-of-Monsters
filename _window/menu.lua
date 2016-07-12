@@ -1,7 +1,7 @@
 menu = {}
 
 function menu.load()
-	menu.tab = "inventory"
+	menu.tab = "states"
 	menu.tabs = {}
 	menu.tabs[1] = button:new({
 		x = 20, y = 20,
@@ -31,6 +31,7 @@ function menu.load()
 	})
 	playerSprite = charecter:new(playerSprite)
 	require("_menu/inventory")
+	require("_menu/saves")
 end
 
 function menu.draw()
@@ -109,9 +110,9 @@ function menu.states.draw()
 	local p = playerSprite
 	love.graphics.setColor(255,255,255)
 	love.graphics.print("level: "..p.level.." --  ".."xp: "..p.xp.."/"..25*2^p.level,30,50)
+	for i = 1,#p.skills do
+		love.graphics.print("lv "..p.skills[i].level.." "..p.skills[i].name.." - "..p.skills[i].xp.."/"..25*2^p.skills[i].level.." xp",30,50+(i*15))
+	end
 end
 
 menu.saves = {}
-
-function menu.saves.draw()
-end

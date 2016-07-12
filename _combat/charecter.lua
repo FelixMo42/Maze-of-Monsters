@@ -2,7 +2,7 @@ charecter = {
 	level = 1, xp = 0,
 	Thp = 100,hp = 100,
 	Tmana = 100,mana = 100,
-	rewards = {xp = 10,items = {weapons["shortsword"]}},
+	rewards = {xp = 10},
 	states = {
 		dex = 0,
 		str = 0,
@@ -47,7 +47,7 @@ function charecter:load()
 	self.mana = self.Tmana
 end
 
-function charecter:GTS(s,b)
+function charecter:GTS(s,xp,b)
 	local t = b or 0
 	if self.bonuses[s] then
 		t = t + self.bonuses[s].b
@@ -55,8 +55,10 @@ function charecter:GTS(s,b)
 	if self.skills[s] then
 		t = t + self.skills[s].level
 		t = t + self.states[self.skills[s].state]
+		self.skills[s]:addXP(xp or 0)
 	elseif skills[s] then
-		self.skills[s] = skills[s]:new{name=s,xp=10}
+		self.skills[s] = skills[s]:new({name=s,xp=xp or 0})
+		self.skills[#self.skills+1] = self.skills[s]
 	end
 	for k in pairs(self.equips) do
 		if self.equips[k].bonuses[s] then

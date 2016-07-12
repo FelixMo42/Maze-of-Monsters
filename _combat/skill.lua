@@ -1,7 +1,7 @@
 skill = {
 	name = "basic",
 	state = "dex",
-	level = 0,
+	level = 1,
 	xp = 0,
 	type = "skill",
 	abilities = {}
@@ -65,9 +65,9 @@ abilities["attack"] = abilitie:new({name="attack"})
 abilities["attack"].func = function(p,t)
 	local p = p or player[math.floor(turn/2)*2-turn+2]
 	local t = t or player[math.loop(math.floor(turn/2)*2-turn+1,2)]
-	local n = math.random(100)
-	local a = math.max(p:GTS(p.equips.weapon.Wtype) + p.equips.weapon.atk - t:GTS("def"),0)
-	local d = t:GTS("dodge") - p:GTS("aim")
+	local n = love.math.random(100)
+	local a = math.max(p:GTS(p.equips.weapon.Wtype,10) + p.equips.weapon.atk - t:GTS("def",5),0)
+	local d = t:GTS("dodge",5) - p:GTS("aim",5)
 	if n >= 95 then
 		t.hp = t.hp - a
 	end
@@ -80,6 +80,7 @@ abilities["defend"].func = function(p,t)
 	local p = p or player[math.floor(turn/2)*2-turn+2]
 	local t = t or player[math.floor(turn/2)*2-turn+2]
 	t.bonuses["def"] = {t = 1, b = 10}
+	t.skills.def:addXP(10)
 end
 abilities["dodge"] = abilitie:new({name = "dodge", speed = 25})
 abilities["dodge"].func = function(p,t)
@@ -87,20 +88,21 @@ abilities["dodge"].func = function(p,t)
 	local p = p or player[math.floor(turn/2)*2-turn+2]
 	local t = t or player[math.floor(turn/2)*2-turn+2]
 	t.bonuses["dodge"] = {t = 1, b = 10}
+	t.skills.def:addXP(10)
 end
 abilities["heal"] = abilitie:new({name = "heal", speed = 25, mana = 10})
 abilities["heal"].func = function(p,t)
 	local p = p or player[math.floor(turn/2)*2-turn+2]
 	local t = t or player[math.floor(turn/2)*2-turn+2]
-	t.hp = t.hp + 10 + p:GTS("healing")
+	t.hp = t.hp + 10 + p:GTS("healing",10)
 end
 abilities["fire blast"] = abilitie:new({name = "fire blast", mana = 20})
 abilities["fire blast"].func = function(p,t)
 	local p = p or player[math.floor(turn/2)*2-turn+2]
 	local t = t or player[math.loop(math.floor(turn/2)*2-turn+1,2)]
-	local n = math.random(100)
-	local a = math.max(p:GTS("pyromancy") + self.equips.Matk - t:GTS("def"),0)
-	local d = t:GTS("dodge") - p:GTS("aim")
+	local n = love.math.random(100)
+	local a = math.max(p:GTS("pyromancy",10) + self.equips.Matk - t:GTS("def",5),0)
+	local d = t:GTS("dodge",5) - p:GTS("aim",5)
 	if n >= 95 then
 		t.hp = t.hp - a
 	end

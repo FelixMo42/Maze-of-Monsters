@@ -12,12 +12,27 @@ function love.load()
 		mouse.tile = vector2:new(0,0)
 		mouse.pos = vector2:new(0,0)
 		mouse.dragge = 0
-	width = love.graphics.getWidth()
-	height = love.graphics.getHeight()
-	game.load()
-	menu.load()
-	combat.load(charecter:new(),charecter:new())
-	window = "menu"
+	--outher
+		width = love.graphics.getWidth()
+		height = love.graphics.getHeight()
+		love.math.setRandomSeed(os.time())
+	--windows
+		windows = {"game","menu","combat"}
+		for i = 1,#windows do
+			_G[windows[i]].load()
+		end
+		window = "game"
+	--saves
+		filename = "data.txt"
+		if not love.filesystem.isFile(filename) then
+			data = love.filesystem.newFile(filename)
+			love.filesystem.write(filename,"")
+		end
+		loadstring(love.filesystem.read(filename))
+	--font
+		for i = 5,100 do
+			_G["f"..i] = love.graphics.newFont(i)
+		end
 end
 
 function love.update(dt)
@@ -70,4 +85,14 @@ function love.wheelmoved(x,y)
 	if _G[window].wheelmoved then
 		_G[window].wheelmoved(x,y)
 	end
+end
+
+function love.quit()
+	data = ""
+	for i = 1,#windows do
+		if _G[windows[i]].quit then
+			_G[windows[i]].quit()
+		end
+	end
+	love.filesystem.write("data.txt",data)
 end

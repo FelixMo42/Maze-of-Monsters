@@ -1,6 +1,7 @@
 item = {
 	name = "item",
 	type = "item",
+	d = 75,
 	x = 1,y = 1,
 	bonuses = {}
 }
