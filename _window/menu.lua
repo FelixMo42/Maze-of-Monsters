@@ -1,5 +1,11 @@
 menu = {}
 
+function menu.select(i)
+	menu.tab = menu.tabs[i].text
+	table.insert(menu.tabs,1,menu.tabs[i])
+	table.remove(menu.tabs,i+1)
+end
+
 function menu.load()
 	menu.tab = "states"
 	menu.tabs = {}
@@ -32,6 +38,7 @@ function menu.load()
 	playerSprite = charecter:new(playerSprite)
 	require("_menu/inventory")
 	require("_menu/saves")
+	require("_menu/states")
 end
 
 function menu.draw()
@@ -75,9 +82,7 @@ function menu.mousereleased(x,y,button,istouch)
 		if not menu[menu.tab].mousereleased(x,y,button,istouch) then
 			for i = 1,#menu.tabs do
 				if menu.tabs[i]:onPressed() then
-					menu.tab = menu.tabs[i].text
-					table.insert(menu.tabs,1,menu.tabs[i])
-					table.remove(menu.tabs,i+1)
+					menu.select(i)
 				end
 			end
 			for i = 1,#menu.ui do
@@ -103,16 +108,3 @@ function menu.resize(w,h)
 		menu.ui[i]:update()
 	end
 end
-
-menu.states = {}
-
-function menu.states.draw()
-	local p = playerSprite
-	love.graphics.setColor(255,255,255)
-	love.graphics.print("level: "..p.level.." --  ".."xp: "..p.xp.."/"..25*2^p.level,30,50)
-	for i = 1,#p.skills do
-		love.graphics.print("lv "..p.skills[i].level.." "..p.skills[i].name.." - "..p.skills[i].xp.."/"..25*2^p.skills[i].level.." xp",30,50+(i*15))
-	end
-end
-
-menu.saves = {}

@@ -3,11 +3,12 @@ charecter = {
 	Thp = 100,hp = 100,
 	Tmana = 100,mana = 100,
 	rewards = {xp = 10},
+	ap = 0, sp = 0,
 	states = {
 		dex = 0,
 		str = 0,
 		con = 0,
-		wis = 0,
+		wil = 0,
 		int = 0,
 		cha = 0
 	},
@@ -43,7 +44,7 @@ end
 function charecter:load()
 	self.Thp = (self.states.con+1)*25
 	self.hp = self.Thp
-	self.Tmana = (self.states.wis+1)*25
+	self.Tmana = (self.states.wil+1)*25
 	self.mana = self.Tmana
 end
 
@@ -74,6 +75,8 @@ function charecter:addXP(xp)
 		if self.xp >= 25*2^self.level then
 			self.xp = self.xp - (25*2^self.level)
 			self.level = self.level + 1
+			self.ap = self.ap + 1
+			self.sp = self.sp + math.floor(self.level*7.76)
 		else
 			return
 		end

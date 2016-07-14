@@ -170,6 +170,10 @@ end
 
 function combat.quit()
 	local p = playerSprite
+	data = data.."playerSprite.ap = "..p.ap.."; playerSprite.sp = "..p.sp.."\n"
+	for k in pairs(p.states) do
+		data = data.."playerSprite.states."..k.." = "..p.states[k].."\n"
+	end
 	data = data.."playerSprite.level = "..p.level.."; playerSprite.xp = "..p.xp.."\n"
 	data = data.."pSkills = {"
 	for i = 1,#p.skills do

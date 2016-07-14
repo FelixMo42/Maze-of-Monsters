@@ -154,6 +154,8 @@ function playerSprite:pathfind(start,target,map)
 	return path,closed,open
 end
 
+playerSprite.blank = playerSprite:new()
+
 npcSprite = sprite:new({name = "goblin"})
 
 function npcSprite:func()

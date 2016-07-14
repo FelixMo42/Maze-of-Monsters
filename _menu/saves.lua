@@ -1,6 +1,14 @@
 menu.saves = {}
 menu.saves.ui = {}
-menu.saves.ui[1] = button:new({x=40,y=60,text="reset"})
+
+local b = button:new({x=40,y=60,text="reset"})
+function b:func()
+	playerSprite = playerSprite.blank:new()
+	playerSprite.blank = playerSprite:new()
+	playerSprite = charecter:new(playerSprite)
+end
+
+menu.saves.ui[1] = b:new()
 
 function menu.saves.draw()
 	for i = 1,#menu.saves.ui do
@@ -9,5 +17,7 @@ function menu.saves.draw()
 end
 
 function menu.saves.mousereleased(x, y, button, istouch)
-
+	for i = 1,#menu.saves.ui do
+		menu.saves.ui[i]:onPressed()
+	end
 end

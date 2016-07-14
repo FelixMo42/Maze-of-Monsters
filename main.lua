@@ -21,7 +21,7 @@ function love.load()
 		for i = 1,#windows do
 			_G[windows[i]].load()
 		end
-		window = "game"
+		window = "menu"
 	--saves
 		filename = "data.txt"
 		if not love.filesystem.isFile(filename) then
