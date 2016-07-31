@@ -9,8 +9,13 @@ abilitie = {
 
 function abilitie:new(this)
 	local this = this or {}
-	setmetatable(this, self)
-	self.__index = self
+	for k in pairs(self) do
+		if type(self[k]) == "table" and not this[k] then
+			this[k] = table.copy(self[k])
+		elseif not this[k] then
+			this[k] = self[k]
+		end
+	end
 	return this
 end
 
@@ -108,10 +113,22 @@ skill = {
 	abilities = {}
 }
 
-function skill:new(this)
+function skill:add(this)
 	local this = this or {}
 	for k in pairs(self) do
 		if not this[k] then
+			this[k] = self[k]
+		end
+	end
+	return this
+end
+
+function skill:new(this)
+	local this = this or {}
+	for k in pairs(self) do
+		if type(self[k]) == "table" and not this[k] then
+			this[k] = table.copy(self[k])
+		elseif not this[k] then
 			this[k] = self[k]
 		end
 	end

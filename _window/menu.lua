@@ -39,6 +39,7 @@ function menu.load()
 	require("_menu/inventory")
 	require("_menu/saves")
 	require("_menu/states")
+	menu.states.load()
 end
 
 function menu.draw()

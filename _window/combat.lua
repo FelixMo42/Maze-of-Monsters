@@ -181,6 +181,6 @@ function combat.quit()
 		if i ~= #p.skills then data = data.."," end
 	end
 	data = data.."}\nplayerSprite.skills = {}\nfor i = 1,#pSkills do\n"
-	data = data.."playerSprite.skills[pSkills[i][1]] = skills[pSkills[i][1]]:new({level=pSkills[i][2],xp=pSkills[i][3]})\n"
+	data = data.."playerSprite.skills[pSkills[i][1]] = skills[pSkills[i][1]]:add({level=pSkills[i][2],xp=pSkills[i][3]})\n"
 	data = data.."playerSprite.skills[#playerSprite.skills+1] = playerSprite.skills[pSkills[i][1]]\nend\n"
 end

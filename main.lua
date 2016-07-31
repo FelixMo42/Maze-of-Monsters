@@ -1,12 +1,12 @@
---system
-	require("_system/console")
-	require("_system/button")
---windows
-	require("_window/game")
-	require("_window/combat")
-	require("_window/menu")
+require("_window/game")
+require("_window/combat")
+require("_window/menu")
 
 function love.load()
+	--font
+		for i = 5,100 do
+			_G["f"..i] = love.graphics.newFont(i)
+		end
 	--mouse
 		mouse = {}
 		mouse.tile = vector2:new(0,0)
@@ -21,7 +21,7 @@ function love.load()
 		for i = 1,#windows do
 			_G[windows[i]].load()
 		end
-		window = "menu"
+		window = "game"
 	--saves
 		filename = "data.txt"
 		if not love.filesystem.isFile(filename) then
@@ -29,10 +29,6 @@ function love.load()
 			love.filesystem.write(filename,"")
 		end
 		loadstring(love.filesystem.read(filename))()
-	--font
-		for i = 5,100 do
-			_G["f"..i] = love.graphics.newFont(i)
-		end
 end
 
 function love.update(dt)

@@ -1,3 +1,6 @@
+require("_system/system")
+require("_system/UI")
+
 function love.conf(t)
     t.identity = nil                    -- The name of the save directory (string)
     t.version = "0.10.1"                -- The LÖVE version this game was made for (string)
